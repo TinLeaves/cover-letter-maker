@@ -51,10 +51,12 @@ export default function UploadResumePage() {
       return
     }
 
-    // Check if we have a job URL from the previous step
+    // Check if we have job information from the previous step
     const jobUrl = localStorage.getItem('tempJobUrl')
-    if (!jobUrl) {
-      alert('Job URL not found. Please go back and enter the job URL.')
+    const jobDescription = localStorage.getItem('tempScrapedContent')
+    
+    if (!jobUrl && !jobDescription) {
+      alert('Job information not found. Please go back and enter the job details.')
       router.push('/job-url')
       return
     }
@@ -75,9 +77,13 @@ export default function UploadResumePage() {
       
       // Navigate to parsing page with parameters
       const params = new URLSearchParams({
-        jobUrl: jobUrl,
         resumeFileName: resumeFile.name
       })
+      
+      // Add jobUrl only if it exists (when using URL mode)
+      if (jobUrl) {
+        params.set('jobUrl', jobUrl)
+      }
       
       router.push(`/parsing?${params.toString()}`)
     } catch (error) {

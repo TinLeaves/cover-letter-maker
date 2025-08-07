@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { scrapeJobListing } from '@/lib/job-scraper'
+import { scrapeJobHtml, parseJobHtml } from '@/lib/job-scraper'
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,9 +12,14 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const jobDescription = await scrapeJobListing(jobUrl)
+    // Scrape raw HTML and then parse it for preview
+    const htmlContent = await scrapeJobHtml(jobUrl)
+    const jobDescription = parseJobHtml(htmlContent)
 
-    return NextResponse.json({ jobDescription })
+    return NextResponse.json({ 
+      jobDescription,
+      htmlContent 
+    })
   } catch (error) {
     console.error('Error scraping job listing:', error)
     return NextResponse.json(

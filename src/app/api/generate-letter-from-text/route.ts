@@ -12,10 +12,20 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Generate cover letter using Gemini
-    const coverLetter = await generateCoverLetter(jobDescription, resumeText)
+    // Generate cover letter using Gemini with direct text input
+    const result = await generateCoverLetter(jobDescription, resumeText, { dataSource: 'direct' })
 
-    return NextResponse.json({ coverLetter })
+    if (!result.success) {
+      return NextResponse.json(
+        { error: result.error || 'Failed to generate cover letter' },
+        { status: 500 }
+      )
+    }
+
+    return NextResponse.json({ 
+      coverLetter: result.content,
+      wordCount: result.wordCount 
+    })
   } catch (error) {
     console.error('Error generating cover letter:', error)
     return NextResponse.json(

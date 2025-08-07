@@ -5,6 +5,52 @@ import * as cheerio from 'cheerio'
 const randomDelay = (min: number, max: number) => 
   Math.floor(Math.random() * (max - min + 1)) + min
 
+// Function to parse HTML content and extract job description
+export function parseJobHtml(htmlContent: string): string {
+  const $ = cheerio.load(htmlContent)
+  
+  // Remove script and style elements
+  $('script, style, nav, header, footer').remove()
+  
+  // Try to find job-specific content
+  let jobText = ''
+  
+  // Common selectors for job listings
+  const selectors = [
+    '[class*="job"]',
+    '[class*="description"]',
+    '[class*="detail"]',
+    '[id*="job"]',
+    '[id*="description"]',
+    'main',
+    '.content',
+    '#content'
+  ]
+  
+  for (const selector of selectors) {
+    const element = $(selector)
+    if (element.length > 0) {
+      const text = element.text().trim()
+      if (text.length > jobText.length) {
+        jobText = text
+      }
+    }
+  }
+  
+  // Fallback to body text if no specific selectors work
+  if (!jobText || jobText.length < 100) {
+    jobText = $('body').text().trim()
+  }
+  
+  // Clean up the text
+  jobText = jobText
+    .replace(/\s+/g, ' ')
+    .replace(/\n+/g, '\n')
+    .trim()
+  
+  return jobText
+}
+
 // Enhanced user agents for better rotation
 const ENHANCED_USER_AGENTS = [
   'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
@@ -16,7 +62,8 @@ const ENHANCED_USER_AGENTS = [
   'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36'
 ]
 
-export async function scrapeJobListing(url: string): Promise<string> {
+// Function to scrape raw HTML content from a job URL
+export async function scrapeJobHtml(url: string): Promise<string> {
   let browser = null
   let retryCount = 0
   const maxRetries = 3
@@ -156,53 +203,12 @@ export async function scrapeJobListing(url: string): Promise<string> {
       if (content.includes('blocked') || content.includes('cloudflare') || content.includes('Ray ID')) {
         throw new Error('Blocked by anti-bot protection')
       }
-    
-      const $ = cheerio.load(content)
       
-      // Remove script and style elements
-      $('script, style, nav, header, footer').remove()
-      
-      // Try to find job-specific content
-      let jobText = ''
-      
-      // Common selectors for job listings
-      const selectors = [
-        '[class*="job"]',
-        '[class*="description"]',
-        '[class*="detail"]',
-        '[id*="job"]',
-        '[id*="description"]',
-        'main',
-        '.content',
-        '#content'
-      ]
-      
-      for (const selector of selectors) {
-        const element = $(selector)
-        if (element.length > 0) {
-          const text = element.text().trim()
-          if (text.length > jobText.length) {
-            jobText = text
-          }
-        }
-      }
-      
-      // Fallback to body text if no specific selectors work
-      if (!jobText || jobText.length < 100) {
-        jobText = $('body').text().trim()
-      }
-      
-      // Clean up the text
-      jobText = jobText
-        .replace(/\s+/g, ' ')
-        .replace(/\n+/g, '\n')
-        .trim()
-      
-      // If we got meaningful content, return it
-      if (jobText.length > 50) {
-        return jobText
+      // Return raw HTML content
+      if (content && content.length > 1000) {
+        return content
       } else {
-        throw new Error('No meaningful content extracted')
+        throw new Error('No meaningful content scraped')
       }
       
     } catch (error) {
@@ -240,4 +246,10 @@ export async function scrapeJobListing(url: string): Promise<string> {
   
   // This should never be reached, but TypeScript requires it
   throw new Error('Unexpected error in scraping logic')
+}
+
+// Convenience function that scrapes and parses in one call
+export async function scrapeJobListing(url: string): Promise<string> {
+  const htmlContent = await scrapeJobHtml(url)
+  return parseJobHtml(htmlContent)
 }

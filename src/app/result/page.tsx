@@ -3,6 +3,9 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { AppLayout } from '@/components/layout'
+import { Button } from '@/components/ui'
+import { HiOutlineClipboard, HiOutlineDownload, HiOutlinePencil, HiOutlineCheck, HiOutlineX } from 'react-icons/hi'
 
 export default function ResultPage() {
   const [coverLetter, setCoverLetter] = useState('')
@@ -16,7 +19,7 @@ export default function ResultPage() {
       setCoverLetter(storedLetter)
       setEditedLetter(storedLetter)
     } else {
-      router.push('/generate')
+      router.push('/')
     }
   }, [router])
 
@@ -47,54 +50,67 @@ export default function ResultPage() {
   }
 
   const handleRegenerate = () => {
-    router.push('/generate')
+    router.push('/')
   }
 
   if (!coverLetter) {
     return (
-      <div className="container mx-auto px-4 py-16">
-        <div className="max-w-2xl mx-auto text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p>Loading your cover letter...</p>
-        </div>
-      </div>
+      <AppLayout>
+        <section className="relative overflow-hidden bg-gradient-to-br from-white via-neutral-50 to-primary-50 min-h-[calc(100vh-4rem)] flex items-center justify-center">
+          <div className="relative container mx-auto px-4 py-16">
+            <div className="max-w-2xl mx-auto text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
+              <p>Loading your cover letter...</p>
+            </div>
+          </div>
+        </section>
+      </AppLayout>
     )
   }
 
   return (
-    <div className="container mx-auto px-4 py-16">
-      <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">
-            Your Cover Letter
-          </h1>
-          <p className="text-gray-600">
-            Review your personalized cover letter below
-          </p>
-        </div>
+    <AppLayout>
+      <section className="relative overflow-hidden bg-gradient-to-br from-white via-neutral-50 to-primary-50 min-h-[calc(100vh-4rem)]">
+        <div className="absolute inset-0 opacity-40" style={{
+          backgroundImage: "url('data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fillRule=\"evenodd\"%3E%3Cg fill=\"%239C92AC\" fillOpacity=\"0.05\"%3E%3Ccircle cx=\"30\" cy=\"30\" r=\"2\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')"
+        }} />
+        
+        <div className="relative container mx-auto px-4 py-8">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-8">
+              <h1 className="text-3xl font-bold text-neutral-900 mb-4">
+                Your Cover Letter
+              </h1>
+              <p className="text-neutral-600">
+                Review your personalized cover letter below
+              </p>
+            </div>
 
-        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-          <div className="border-b border-gray-200 px-6 py-4 flex justify-between items-center">
-            <h2 className="text-lg font-semibold text-gray-900">Cover Letter</h2>
-            <div className="flex space-x-2">
+            <div className="bg-white rounded-2xl shadow-soft border border-neutral-200 overflow-hidden">
+              <div className="border-b border-neutral-200 px-6 py-4 flex justify-between items-center">
+                <h2 className="text-lg font-semibold text-neutral-900">Cover Letter</h2>
+                <div className="flex space-x-2">
               {!isEditing ? (
                 <>
                   <button
                     onClick={() => setIsEditing(true)}
-                    className="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 rounded transition-colors"
+                    className="inline-flex items-center px-3 py-1.5 text-sm bg-neutral-100 hover:bg-neutral-200 text-neutral-700 rounded-lg transition-colors"
                   >
+                    <HiOutlinePencil className="w-4 h-4 mr-1" />
                     Edit
                   </button>
                   <button
                     onClick={handleCopy}
-                    className="px-3 py-1 text-sm bg-blue-100 hover:bg-blue-200 text-blue-700 rounded transition-colors"
+                    className="inline-flex items-center px-3 py-1.5 text-sm bg-primary-100 hover:bg-primary-200 text-primary-700 rounded-lg transition-colors"
                   >
+                    <HiOutlineClipboard className="w-4 h-4 mr-1" />
                     Copy
                   </button>
                   <button
                     onClick={handleDownload}
-                    className="px-3 py-1 text-sm bg-green-100 hover:bg-green-200 text-green-700 rounded transition-colors"
+                    className="inline-flex items-center px-3 py-1.5 text-sm bg-success-100 hover:bg-success-200 text-success-700 rounded-lg transition-colors"
                   >
+                    <HiOutlineDownload className="w-4 h-4 mr-1" />
                     Download
                   </button>
                 </>
@@ -102,14 +118,16 @@ export default function ResultPage() {
                 <>
                   <button
                     onClick={handleSaveEdit}
-                    className="px-3 py-1 text-sm bg-green-600 hover:bg-green-700 text-white rounded transition-colors"
+                    className="inline-flex items-center px-3 py-1.5 text-sm bg-success-600 hover:bg-success-700 text-white rounded-lg transition-colors"
                   >
+                    <HiOutlineCheck className="w-4 h-4 mr-1" />
                     Save
                   </button>
                   <button
                     onClick={handleCancelEdit}
-                    className="px-3 py-1 text-sm bg-gray-400 hover:bg-gray-500 text-white rounded transition-colors"
+                    className="inline-flex items-center px-3 py-1.5 text-sm bg-neutral-400 hover:bg-neutral-500 text-white rounded-lg transition-colors"
                   >
+                    <HiOutlineX className="w-4 h-4 mr-1" />
                     Cancel
                   </button>
                 </>
@@ -122,12 +140,12 @@ export default function ResultPage() {
               <textarea
                 value={editedLetter}
                 onChange={(e) => setEditedLetter(e.target.value)}
-                className="w-full h-96 p-4 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full h-96 p-4 border border-neutral-300 rounded-xl resize-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200"
                 style={{ fontFamily: 'monospace' }}
               />
             ) : (
               <div 
-                className="prose max-w-none text-gray-800 leading-relaxed"
+                className="prose max-w-none text-neutral-800 leading-relaxed"
                 style={{ whiteSpace: 'pre-wrap' }}
               >
                 {coverLetter}
@@ -136,21 +154,14 @@ export default function ResultPage() {
           </div>
         </div>
 
-        <div className="mt-8 flex justify-center space-x-4">
-          <button
-            onClick={handleRegenerate}
-            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors duration-200"
-          >
+        <div className="mt-8 flex justify-center">
+          <Button onClick={handleRegenerate} size="lg">
             Generate New Letter
-          </button>
-          <Link 
-            href="/" 
-            className="px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-lg transition-colors duration-200"
-          >
-            Back to Home
-          </Link>
+          </Button>
         </div>
-      </div>
-    </div>
+          </div>
+        </div>
+      </section>
+    </AppLayout>
   )
 }
