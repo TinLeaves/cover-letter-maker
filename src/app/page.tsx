@@ -158,7 +158,7 @@ export default function Home() {
                     </div>
                     <div className="flex items-center">
                       <HiOutlineCheckCircle className="w-5 h-5 text-success-500 mr-2" />
-                      Powered by Google Gemini 2.0 Flash
+                      Powered by Google Gemini 2.5 Pro
                     </div>
                   </div>
                 </div>

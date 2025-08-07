@@ -1,15 +1,17 @@
 # Cover Letter Maker
 
-An AI-powered web application that generates personalized cover letters using Google Gemini 2.5 Pro. Simply provide a job listing URL and upload your resume to get a tailored cover letter in seconds.
+An AI-powered web application that generates personalized cover letters using Google Gemini 2.5 Pro. Simply provide a job listing URL or paste the job description directly, upload your resume, and get a tailored cover letter in seconds.
 
 ## Features
 
 - 🤖 AI-powered cover letter generation using Google Gemini 2.5 Pro
-- 📄 Resume parsing (DOCX support, PDF coming soon)
+- 📄 Resume parsing (DOCX support)
 - 🔍 Automatic job listing scraping from URLs
+- ✍️ Manual job description input option
 - ✏️ Edit and customize generated letters
-- 💾 Download cover letters as text files
-- 📱 Responsive design with Tailwind CSS
+- 💾 Copy to clipboard and download as text files
+- 📱 Responsive design with consistent styling
+- 🎨 Modern UI with professional navigation
 
 ## Tech Stack
 
@@ -32,7 +34,7 @@ An AI-powered web application that generates personalized cover letters using Go
 
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/TinLeaves/cover-letter-maker.git
    cd cover-letter-maker
    ```
 
@@ -65,23 +67,20 @@ An AI-powered web application that generates personalized cover letters using Go
 
 ## Usage
 
-1. **Homepage**: Review the app description and click "Get Started"
-2. **Job URL Page**: 
-   - Enter the job listing URL
-   - Click "Continue to Resume Upload"
-3. **Resume Upload Page**: 
+1. **Homepage**: 
+   - Choose between entering a job URL or pasting the job description directly
    - Upload your resume (DOCX format)
-   - Click "Start Processing"
-4. **Parsing Page**: 
+   - Click "Generate Cover Letter"
+2. **Parsing Page**: 
    - Watch as the system extracts information from the job listing and your resume
    - Automatic progress tracking with visual indicators
-5. **Review Page**: 
+3. **Review Page**: 
    - Review the extracted job description and resume content
-   - Edit the text directly if needed
+   - Edit the text directly if needed (especially if scraping was blocked)
    - Click "Generate Cover Letter"
-6. **Result Page**: 
+4. **Result Page**: 
    - Review the generated cover letter
-   - Edit if needed
+   - Edit directly in the interface if needed
    - Copy to clipboard or download as a text file
 
 ## API Endpoints
@@ -98,16 +97,21 @@ An AI-powered web application that generates personalized cover letters using Go
 src/
 ├── app/
 │   ├── api/           # API routes
-│   ├── job-url/       # Job URL input page
-│   ├── upload-resume/ # Resume upload page
+│   ├── how-it-works/  # How it works page
 │   ├── parsing/       # Data parsing progress page
 │   ├── review/        # Review parsed data page
-│   ├── result/        # Result page
-│   └── page.tsx       # Homepage
+│   ├── result/        # Result page with editing capabilities
+│   ├── upload-resume/ # Legacy resume upload page
+│   └── page.tsx       # Homepage with integrated form
+├── components/
+│   ├── layout/        # App layout and header components
+│   ├── ui/            # Reusable UI components (Button, Input, etc.)
+│   └── cover-letter/  # Cover letter specific components
 ├── lib/               # Utility functions
 │   ├── gemini.ts      # Google Gemini AI integration
-│   ├── resume-parser.ts # Resume parsing logic
-│   └── job-scraper.ts # Web scraping logic
+│   ├── job-scraper.ts # Web scraping logic
+│   ├── haptics.ts     # Mobile haptic feedback
+│   └── utils.ts       # General utilities
 └── types/             # TypeScript type definitions
 ```
 
@@ -150,10 +154,6 @@ The app includes multiple anti-detection features:
 3. Commit your changes (`git commit -m 'Add some amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Support
 
